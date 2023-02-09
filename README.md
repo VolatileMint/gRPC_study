@@ -15,5 +15,10 @@ protoを利用したgolangでのAPIサーバー作成
 > protoc-gen-go --version
 protoc-gen-go.exe v1.28.1
 ```
+protoファイルのコンパイル
+```
+>protoc AAA.proto --go_out=.\
+```
+AAA.pb.proto ファイルが生成される
 ## 参考資料
 Protocol Buffers導入: https://qiita.com/nozmiz/items/fdbd052c19dad28ab067

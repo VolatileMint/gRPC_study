@@ -32,7 +32,9 @@ func (s *myServer) Hello(ctx context.Context, req *hellopb.HelloRequest) (*hello
 		Detail: "detail reason of err",
 	})
 	err := stat.Err()
-	return &hellopb.HelloResponse{ /**/ }, err
+	return &hellopb.HelloResponse{
+		Message: fmt.Sprintf("Hello, %s!", req.GetName()),
+	}, err
 }
 
 // Server stream RPC の通信終了時
@@ -103,7 +105,17 @@ func main() {
 	}
 
 	// gRPCサーバーを作成
-	s := grpc.NewServer()
+	s := grpc.NewServer(
+		// grpc.StreamInterceptor(myStreamServerInterceptor1),
+		// grpc.ChainUnaryInterceptor(
+		// 	myUnaryServerInterceptor1,
+		// 	myUnaryServerInterceptor2,
+		// ),
+		grpc.ChainStreamInterceptor(
+			myStreamServerInterceptor1,
+			myStreamServerInterceptor2,
+		),
+	)
 
 	// gRPCサーバーにGreetingServiceを登録
 	hellopb.RegisterGreetingServiceServer(s, NewMyServer())
